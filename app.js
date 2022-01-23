@@ -50,5 +50,10 @@ const Command = require('./routes/Command.route');
 
 app.use('/api/Command',Command);
 
+// ---------------- Prime ----------------
+
+const Prime = require('./routes/Prime.route');
+
+app.use('/api/Prime',Prime);
 
 app.listen(4000);

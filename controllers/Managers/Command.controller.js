@@ -3,6 +3,34 @@ const axios = require('axios')
 const nodemailer = require('nodemailer');
 const Driver = require('../../models/Driver.model');
 
+// ------------------- Mail ---------------------
+
+EMAIL = (email)=>{
+
+  var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'testcoding975@gmail.com',
+      pass: 'testCoding1998'
+    }
+  });
+    
+  var mailOptions = {
+    from: 'testcoding975@gmail.com',
+    to: email,
+    subject: 'Command ',
+    text: 'You have a new command'
+  };
+    
+  transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
+}
+
 // ------------------- create -------------------
 
 exports.create = async(req, res) => {
@@ -22,13 +50,35 @@ exports.create = async(req, res) => {
     Poid: req.body.poid,
     Prix: prix,
     Distance: distance.data.distance+' KM',
-    Status:  req.body.status,
+    Status:  'En cour',
   });
 
   command
-    .save(command)
-    .then(data => {
-      res.json(data);
+    .save()
+    .then(async(data) => {
+
+      const driver = await Driver.find();
+
+      // Sending email to the drivers
+      
+      driver.forEach(element => {
+
+        if (element.Vehicule == 'car' && req.body.poid > 0 && req.body.poid <= 200 ) {
+
+          EMAIL(element.email);
+          
+        }else if (element.Vehicule == 'PetitCamio' && req.body.poid > 200 && req.body.poid <= 800 ) {
+
+          EMAIL(element.email);
+
+        } else if (element.Vehicule == 'GrandCamio' && req.body.poid > 800 && req.body.poid <= 1600 ) {
+
+          EMAIL(element.email);
+
+        }
+
+      })
+
     })
     .catch(err => console.log(err));
 
@@ -36,9 +86,9 @@ exports.create = async(req, res) => {
 
 // ------------------- fetch -------------------
 
-exports.findAll = (req,res) => {
+exports.findAll = async(req,res) => {
 
-  Command.find()
+  await Command.find().populate('Driver')
   .then(data => { 
     res.json(data)
   }) 
@@ -52,7 +102,6 @@ exports.findAll = (req,res) => {
 
 exports.delete = (req,res) => {
   const id = req.params._id;
-  const driver = Driver.find()
 
   Command.findByIdAndRemove(id)
   .then(data => {

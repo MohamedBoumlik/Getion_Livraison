@@ -8,7 +8,8 @@ exports.create = (req, res) => {
   const driver = new Driver({
     name:  req.body.name, // String is shorthand for {type: String}
     email: req.body.email,
-    password:  password
+    password:  password,
+    Vehicule: req.body.Vehicule
   });
 
   driver
