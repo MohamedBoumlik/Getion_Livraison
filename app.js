@@ -3,6 +3,8 @@ const app = express();
 const cors = require("cors");
 const mongoose = require('mongoose');
 const bodyparser = require('body-parser');
+const morgane = require('morgan');
+const fs = require('fs');
 require('dotenv/config');
 
 app.use(cors({
@@ -10,8 +12,12 @@ app.use(cors({
     methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH']
 }));
 
+
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({extended: true}));
+
+morgane.token('body', (req) => JSON.stringify(req.body));
+app.use(morgane(':status :method :url :body :response-time ms',{stream: fs.createWriteStream('./Logger.log', {flags: 'a'})}))
 
 mongoose.connect(
 
@@ -53,6 +59,8 @@ app.use('/api/Command',Command);
 // ---------------- Prime ----------------
 
 const Prime = require('./routes/Prime.route');
+const morgan = require('morgan');
+const req = require('express/lib/request');
 
 app.use('/api/Prime',Prime);
 
