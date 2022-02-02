@@ -36,6 +36,6 @@ exports.Primes_Drivers = async(req,res) => {
     distance_Prime = price * 0.15;
   }
 
-  res.json(distance_Prime)
+  res.json();
 
 };

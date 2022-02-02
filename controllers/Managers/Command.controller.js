@@ -39,10 +39,10 @@ exports.create = async(req, res) => {
 
   let prix = req.body.poid*40;
 
-  if(req.body.piod > 3){
-    prix =(40*3) + (req.body.poids - 3) * 5
+  if(req.body.poid > 3){
+    prix =(40*3) + (req.body.poid - 3) * 5
   };
-
+  
   const command = new Command({
     Nom:  req.body.name,
     VilleD: req.body.villeD,
@@ -56,7 +56,7 @@ exports.create = async(req, res) => {
   command
     .save()
     .then(async(data) => {
-
+      res.json(data)
       const driver = await Driver.find();
 
       // Sending email to the drivers

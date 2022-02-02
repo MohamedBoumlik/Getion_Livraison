@@ -65,6 +65,7 @@ exports.delete = (req,res) => {
 exports.update = (req,res) => {
 
   const id = req.params._id;
+  // console.log(req.body);
 
   Manager.findByIdAndUpdate(id, req.body) 
   .then(data => {
